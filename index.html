@@ -1,1 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Birthday month Begins-!</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(#000428, #000);
+      overflow: hidden;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 60px;
+    }
+
+    /* Typing animation */
+    .typing-text {
+      width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 3px solid white;
+      font-size: 2em;
+      animation: typing 5s steps(40, end) forwards, blink 0.8s step-end infinite;
+      z-index: 2;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    .subtext {
+      font-size: 1.2em;
+      margin-top: 10px;
+      opacity: 0.85;
+      z-index: 2;
+    }
+
+    .age-box {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #ffccff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #ff99ff;
+      margin: 30px 0;
+      font-size: 1.2em;
+      line-height: 1.8;
+      width: 320px;
+      max-width: 90%;
+      z-index: 2;
+    }
+
+    .label {
+      color: #ccc;
+      font-weight: 500;
+    }
+
+    .value {
+      font-weight: bold;
+      color: #ffccff;
+    }
+
+    /* Falling hearts */
+    .falling-heart {
+      position: fixed;
+      top: -40px;
+      pointer-events: none;
+      z-index: 1;
+      animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(120vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Starry background */
+    .stars::before, .stars::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      box-shadow:
+        1200px 300px white,
+        700px 900px white,
+        400px 200px white,
+        250px 1000px white,
+        100px 200px white;
+      animation: twinkle 4s infinite alternate ease-in-out;
+    }
+
+    .stars {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.2; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.1); }
+    }
+
+    /* Balloons in background */
+    .balloon-bg {
+      content: '🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈';
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      font-size: 5vw;
+      color: white;
+      opacity: 0.05;
+      line-height: 1.5;
+      text-align: center;
+      z-index: 0;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Marry Me Section */
+    .proposal {
+      margin-top: 30px;
+      z-index: 3;
+    }
+
+    .proposal button {
+      font-size: 1.2em;
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      background-color: #ff66b2;
+      color: white;
+      transition: 0.3s;
+      box-shadow: 0 0 10px #ff99cc;
+    }
+
+    .proposal #noBtn:hover {
+      transform: translateX(calc(100px - 50%));
+    }
+
+    #yesMsg {
+      font-size: 1.5em;
+      margin-top: 20px;
+      color: #ffccff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stars"></div>
+  <div class="balloon-bg">🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈</div>
+
+  <div class="typing-text">Birthday month Begins-! ❤️</div>
+  <div class="subtext typing-text" style="animation-delay: 5s;">You're growing more beautiful every second!  the countdown starts from now-</div>
+
+  <div class="age-box" id="age-stats"></div>
+
+  <div class="proposal">
+    <button onclick="showProposal()">💍 Will You Marry Me?</button>
+    <div id="proposalBtns" style="display:none;">
+      <button onclick="acceptProposal()">Yes 💖</button>
+      <button id="noBtn" onmouseover="moveNo(this)">No 😜</button>
+    </div>
+    <div id="yesMsg"></div>
+  </div>
+
+  <script>
+    // Age Calculator
+    const birthDate = new Date('2006-08-25T00:00:00');
+    function updateAge() {
+      const now = new Date();
+      const diffMs = now - birthDate;
+      const diffSecs = Math.floor(diffMs / 1000);
+      const minutes = Math.floor(diffSecs / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+      const weeks = Math.floor(days / 7);
+      const months = (now.getFullYear() - birthDate.getFullYear()) * 12 + now.getMonth() - birthDate.getMonth();
+
+      let years = now.getFullYear() - birthDate.getFullYear();
+      let monthsExact = now.getMonth() - birthDate.getMonth();
+      let daysExact = now.getDate() - birthDate.getDate();
+      if (daysExact < 0) {
+        monthsExact--;
+        const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+        daysExact += prevMonth.getDate();
+      }
+      if (monthsExact < 0) {
+        years--;
+        monthsExact += 12;
+      }
+
+      document.getElementById('age-stats').innerHTML = `
+        <div><span class="label">Exact Age:</span> <span class="value">${years} years, ${monthsExact} months, ${daysExact} days</span></div>
+        <div><span class="label">Or:</span> <span class="value">${months} months</span></div>
+        <div><span class="label">Or:</span> <span class="value">${weeks} weeks, ${days % 7} days</span></div>
+        <div><span class="label">Or:</span> <span class="value">${days} days</span></div>
+        <div><span class="label">Or:</span> <span class="value">${hours} hours</span></div>
+        <div><span class="label">Or:</span> <span class="value">${minutes} minutes</span></div>
+        <div><span class="label">Or:</span> <span class="value">${diffSecs.toLocaleString()} seconds</span></div>
+      `;
+    }
+    updateAge();
+    setInterval(updateAge, 1000);
+
+    // Falling hearts
+    const heartColors = ['#ff69b4', '#ffb6c1', '#ffccff', '#fff', '#ff4f81'];
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('falling-heart');
+      heart.textContent = '❤️';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.fontSize = (18 + Math.random() * 30) + 'px';
+      heart.style.animationDuration = (3 + Math.random() * 4) + 's';
+      heart.style.color = heartColors[Math.floor(Math.random() * heartColors.length)];
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 7000);
+    }
+    setInterval(() => {
+      for (let i = 0; i < 6; i++) createHeart();
+    }, 300);
+
+    // Proposal logic
+    function showProposal() {
+      document.getElementById('proposalBtns').style.display = 'block';
+    }
+
+    function acceptProposal() {
+      document.getElementById('yesMsg').textContent = "Yay! 💍 I love you forever, Yuki 💖💖💖";
+    }
+
+    function moveNo(btn) {
+      btn.style.position = 'relative';
+      btn.style.left = (Math.random() * 100 - 50) + 'px';
+      btn.style.top = (Math.random() * 100 - 50) + 'px';
+    }
+  </script>
+
+</body>
+</html>
 
